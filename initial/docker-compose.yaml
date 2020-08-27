@@ -1,0 +1,36 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: mysql:5.7.31
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: db_example
+      MYSQL_USER: springuser
+      MYSQL_PASSWORD: ThePassword
+    ports:
+       - "3306:3306"
+    volumes:
+      - /var/opt:/var/lib/mysql
+  
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+
+
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    
+    depends_on:
+      - db
